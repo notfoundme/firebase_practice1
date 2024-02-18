@@ -12,6 +12,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController pwController = TextEditingController();
+
+
+  @override
+  void dispose() {
+    // be a good citizen
+    emailController.dispose();
+    pwController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>  SignUpScreen(
+                      builder: (context) =>  const SignUpScreen(
                            
                           )),
                 );
