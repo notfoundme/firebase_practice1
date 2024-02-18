@@ -1,5 +1,7 @@
+import 'package:firebase_first/viewmodel/signup_vm.dart';
 import 'package:firebase_first/views/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MainApp());
@@ -10,8 +12,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home:LoginScreen(),
+    return Provider<SignUpVm>(
+      create: (context) => SignUpVm(),
+      child: const MaterialApp(
+        home: LoginScreen(),
+      ),
     );
   }
 }

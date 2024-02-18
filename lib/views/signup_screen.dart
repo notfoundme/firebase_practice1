@@ -1,10 +1,12 @@
+import 'package:firebase_first/viewmodel/signup_vm.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
-  final String email;
-  final String pw;
-  const SignUpScreen({super.key, required this.email, required this.pw});
+  const SignUpScreen({
+    super.key,
+  });
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -15,9 +17,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController pwController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final vm1 = Provider.of<SignUpVm>(context);
+
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(),
+        leading: const BackButton(),
         title: Text(
           "Sign up",
           style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
@@ -26,37 +30,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
       body: Column(children: [
         //email
         Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: TextField(
             controller: emailController,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
+                borderSide: const BorderSide(color: Colors.grey),
                 borderRadius: BorderRadius.circular(10.0),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.purple),
+                borderSide: const BorderSide(color: Colors.purple),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              label: Text("email"),
+              label: const Text("Enter your Email"),
             ),
           ),
         ),
         //password
         Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: TextField(
             controller: pwController,
             decoration: InputDecoration(
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey),
+                borderSide: const BorderSide(color: Colors.grey),
                 borderRadius: BorderRadius.circular(10.0),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.purple),
+                borderSide: const BorderSide(color: Colors.purple),
                 borderRadius: BorderRadius.circular(10.0),
               ),
-              label: Text("Enter your password"),
+              label: const Text("Enter your password"),
             ),
             obscureText: true,
           ),
@@ -67,8 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           onTap: () {
             String email = emailController.text;
             String password = pwController.text;
-            print(email +" "+ password);
-            setState(() {});
+            vm1.signupUser(email, password);
             emailController.clear();
             pwController.clear();
           },
@@ -96,6 +99,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ),
+
+        //
+        Consumer<SignUpVm>(builder: (context, vm, _) {
+          if (vm.signupStatus == 0) {
+            return Container();
+          } else if (vm.signupStatus == 1) {
+            return const CircularProgressIndicator();
+          } else if (vm.signupStatus == 2) {
+            return Container();
+          }
+          // error state case
+          return const Text(
+            "Cannot sign in",
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        }),
       ]),
     );
   }
