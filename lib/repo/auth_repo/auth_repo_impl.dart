@@ -5,20 +5,33 @@ class FirebaseAuthRepoImpl implements AuthRepo {
   FirebaseAuth fAuth = FirebaseAuth.instance;
   @override
   bool isUserLoggedIn() {
-    // TODO: implement isUserLoggedIn
-    throw UnimplementedError();
+    User? user = fAuth.currentUser;
+    return user != null;
   }
 
   @override
-  Future<bool> userLogin(String email, String pw) {
-    // TODO: implement userLogin
-    throw UnimplementedError();
+  Future<bool> userLogin(String email, String pw) async {
+    try {
+      UserCredential loginData =
+          await fAuth.signInWithEmailAndPassword(email: email, password: pw);
+      if (loginData.user != null) {
+        return true; // Login successful
+      } else {
+        return false; // Login failed
+      }
+    } catch (e) {
+      throw Exception("Unknown error occurred");
+    }
   }
 
   @override
-  Future<bool> userSignout() {
-    // TODO: implement userSignout
-    throw UnimplementedError();
+  Future<bool> userSignout() async {
+    try {
+      await fAuth.signOut();
+      return true; // Signout successful
+    } catch (e) {
+      return false; // Signout failed
+    }
   }
 
   @override
@@ -27,12 +40,20 @@ class FirebaseAuthRepoImpl implements AuthRepo {
       UserCredential userData = await fAuth.createUserWithEmailAndPassword(
           email: email, password: pw);
       if (userData.user == null) {
-        return false;
+        return false; // Signup failed
       } else {
-        return true;
+        return true; // Signup successful
       }
     } catch (e) {
       throw Exception("Unknown error occured");
     }
   }
 }
+
+// User? get currentUser {
+//   if (_delegate.currentUser != null) {
+//     return User._(this, _delegate.currentUser!);
+//   }
+
+//   return null;
+// }
