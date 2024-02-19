@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_first/firebase_options.dart';
+import 'package:firebase_first/viewmodel/login_vm.dart';
 import 'package:firebase_first/viewmodel/signup_vm.dart';
 import 'package:firebase_first/views/login_screen.dart';
+import 'package:firebase_first/views/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,9 +22,12 @@ class MainApp extends StatelessWidget {
     /// since this is providing the [ChangeNotifier]
     /// see  https://stackoverflow.com/a/68811697
     return ChangeNotifierProvider(
-      create: (context) => SignUpVm(),
-      child: const MaterialApp(
-        home: LoginScreen(),
+      create: (BuildContext context) => LoginVm(),
+      child: ChangeNotifierProvider(
+        create: (context) => SignUpVm(),
+        child: const MaterialApp(
+          home: SplashScreen(),
+        ),
       ),
     );
   }

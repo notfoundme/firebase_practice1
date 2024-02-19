@@ -1,6 +1,9 @@
+import 'package:firebase_first/viewmodel/login_vm.dart';
+import 'package:firebase_first/views/home_screen.dart';
 import 'package:firebase_first/views/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,7 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
   TextEditingController pwController = TextEditingController();
 
-
   @override
   void dispose() {
     // be a good citizen
@@ -24,11 +26,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final vm2 = Provider.of<LoginVm>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text(
-            "Sign up",
+            "Login",
             style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
           ),
         ),
@@ -80,9 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
           onTap: () {
             String email = emailController.text;
             String password = pwController.text;
-            print(email + " " + password);
-
-            setState(() {});
+            //when clicked Initiate a loginUser event
+            vm2.loginUser(email, password);
             emailController.clear();
             pwController.clear();
           },
@@ -127,10 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Navigate to the signup screen when the button is clicked
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) =>  const SignUpScreen(
-                           
-                          )),
+                  MaterialPageRoute(builder: (context) => const SignUpScreen()),
                 );
               },
               child: Text(
@@ -143,6 +143,35 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
+
+        Consumer<LoginVm>(builder: (context, vm, _) {
+          if (vm.loginStatus == 0) {
+            return Container();
+          } else if (vm.loginStatus == 1) {
+            return const CircularProgressIndicator();
+          } else if (vm.loginStatus == 2) {
+            //screen build huda navigation garna paaidaina causes error.
+            //so written in this funn
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => HomeScreen(),
+                ),
+              );
+            });
+            return Container();
+          }
+          // error state case
+          return const Text(
+            "Cannot login",
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          );
+        }),
       ]),
     );
   }

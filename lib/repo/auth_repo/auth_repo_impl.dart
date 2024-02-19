@@ -6,7 +6,7 @@ class FirebaseAuthRepoImpl implements AuthRepo {
   @override
   bool isUserLoggedIn() {
     User? user = fAuth.currentUser;
-    return user != null;
+    return  user != null;
   }
 
   @override
@@ -50,10 +50,3 @@ class FirebaseAuthRepoImpl implements AuthRepo {
   }
 }
 
-// User? get currentUser {
-//   if (_delegate.currentUser != null) {
-//     return User._(this, _delegate.currentUser!);
-//   }
-
-//   return null;
-// }
